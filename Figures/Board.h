@@ -1,12 +1,15 @@
- #pragma once
- #include<vector>
- #include<map>
- #include"Figure.h"
- #include"Queen.h"
- #include"Pawn.h"
- #include"Knight.h"
- #include"Rook.h"
- #include"Bishop.h"
+#pragma once
+#include <vector>
+#include <map>
+#include "Figure.h"
+#include "Queen.h"
+#include "Pawn.h"
+#include "Knight.h"
+#include "Rook.h"
+#include "Bishop.h"
+#include "King.h"
+
+
 
 #ifndef Board_h
 #define Board_h
@@ -19,6 +22,8 @@ private:
 public: 
     Board();
 
+    Figure* GetFigure(const std::pair<int, int>& coord);
+
     int CheckBusyOrNot(const std::pair<int, int>& coord);
 
     /**
@@ -28,19 +33,23 @@ public:
      *  Будет производиться 2 проверки :
      *  1) есть ли вообще фигура на этой коорддинате
      *  2) может ли эта фигура пойти на новую координату 
-     * 
-     * 
-     * @param Figure*
-     * 
-     * @param std::pair<int, int> current получает начальную координату 
-     * 
-     * @param std::pair<int, int> new_coordinate новая координата  
     */
-    void MoveFigure(Figure* figure, const std::pair<int, int>& current_pos, const std::pair<int, int>& new_pos);
+    void MoveFigure(Figure* figure, Color& color, const std::pair<int, int>& current_pos, const std::pair<int, int>& new_pos);
 
 
-    // отображает экран в виде 1, 0, -1; 
+    // отображает экран с фигурами;
     void DisplayBoard();
+
+
+
+    /**
+     * @brief Функция для проверки состояния короля
+     * 
+     * 
+     * @return true если король находиться под шахом, и false в обратном случае
+    */
+
+    bool isKingUnderCheck(Color& color);
 
 private:
     /**
@@ -60,6 +69,21 @@ private:
       * если типа перед пешкой(белой) стоит -1 то нельзя туда идти; 
      */
      void InitialBusyCages();
+
+     /**
+      * @brief Эта функция "Делает несколько проверок"
+      * 
+      * Проверяет вообще нормальные ли были переданы координаты, правильная ли фигура была взята,
+      * и исходя из положения доски определаят валидность хода
+     */
+     inline bool Check(Figure* f, Color& color, const std::pair<int, int>& current, const std::pair<int, int>& new_pos);
+
+    /**
+     * @brief Особые случаи 
+     * В случаях когда был сделан ход пешкой или ладьей, или королем процесс хода чуток отличается от других поэтому
+     * и реализуется эта функция
+    */
+     void SpecialCases(Figure* f, const std::pair<int, int>& curr, const std::pair<int, int>& new_pos);
  };
 
  #endif
