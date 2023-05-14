@@ -46,7 +46,7 @@ bool Bishop::ValidOrNot(const std::pair<int, int>& current, const std::pair<int,
 
      else if(current.first > new_pos.first && current.second < new_pos.second)
      {
-         for(int i = current.first - 1, j = current.second + 1; i < new_pos.first && j > new_pos.second; i--, j++)
+         for(int i = current.first - 1, j = current.second + 1; i > new_pos.first && j < new_pos.second; i--, j++)
          {
             if(b.CheckBusyOrNot({i,j}))
             {
