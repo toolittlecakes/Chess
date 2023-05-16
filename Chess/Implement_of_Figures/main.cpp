@@ -1,4 +1,5 @@
-#include <iostream> 
+// Это точно должно быть не в папке Implement_of_Figures
+#include <iostream>
 #include "raylib.h"
 #include <map>
 #include "../Figures/King.h"
@@ -29,6 +30,7 @@ int main()
 
     Board board;
 
+    // Это нужно объявлять заранее? Можно же прям в цикле с типом auto
     std::map<std::pair<int, int>, Figure*> positions_of_figures;
 
 
@@ -51,6 +53,10 @@ int main()
 
     while (!WindowShouldClose())
     {
+        // тебе тут нужен get_positions метод, который возвращает константную ссылку на мапу. Если захочешь, то сделаешь копию с помощью
+        // auto positions = board.get_positions()
+        // А если не захочешь копировать, сделаешь ссылку
+        // const auto& positions = board.get_positions()
         positions_of_figures = board.Copy_of_position();
 
         BeginDrawing();
@@ -98,13 +104,14 @@ int main()
         {
             if(typeid(*it.second) == typeid(King))
             {
+                // У тебя дублирование этого кода во всех if. Надо подумать, как этого избежать
                 if(it.second->GetColor() == 1)
                 {
                     DrawTexture(wKing,  (it.first.second + 1) * cellSize + 5, abs(8 - it.first.first) * cellSize + 5, RAYWHITE);
                 }
 
                 else {
-                    DrawTexture(bKing, (it.first.second + 1) * cellSize + 5, abs(8 - it.first.first) * cellSize + 5, RAYWHITE);                
+                    DrawTexture(bKing, (it.first.second + 1) * cellSize + 5, abs(8 - it.first.first) * cellSize + 5, RAYWHITE);
                 }
             }
 
@@ -112,11 +119,11 @@ int main()
             {
                 if(it.second->GetColor() == 1)
                 {
-                    DrawTexture(wRook, (it.first.second + 1) * cellSize + 5, ((8 - it.first.first)) * cellSize + 5, RAYWHITE);    
-                }            
+                    DrawTexture(wRook, (it.first.second + 1) * cellSize + 5, ((8 - it.first.first)) * cellSize + 5, RAYWHITE);
+                }
 
                 else{
-                    DrawTexture(bRook, (it.first.second + 1) * cellSize + 5, ((8 - it.first.first)) * cellSize + 5, RAYWHITE);       
+                    DrawTexture(bRook, (it.first.second + 1) * cellSize + 5, ((8 - it.first.first)) * cellSize + 5, RAYWHITE);
                 }
             }
 
@@ -124,19 +131,19 @@ int main()
             {
                 if(it.second->GetColor() == 1)
                 {
-                    DrawTexture(wBishop, (it.first.second + 1) * cellSize + 5, ((8 - it.first.first)) * cellSize + 5, RAYWHITE);       
+                    DrawTexture(wBishop, (it.first.second + 1) * cellSize + 5, ((8 - it.first.first)) * cellSize + 5, RAYWHITE);
                 }
 
                 else{
-                    DrawTexture(bBishop, (it.first.second + 1) * cellSize + 5, ((8 - it.first.first)) * cellSize + 5, RAYWHITE);       
+                    DrawTexture(bBishop, (it.first.second + 1) * cellSize + 5, ((8 - it.first.first)) * cellSize + 5, RAYWHITE);
                 }
             }
-            
+
             else if(typeid(*it.second) == typeid(Queen))
             {
                 if(it.second->GetColor() == 1)
                 {
-                    DrawTexture(wQueen, (it.first.second + 1) * cellSize + 5, ((8 - it.first.first)) * cellSize + 5, RAYWHITE);                       
+                    DrawTexture(wQueen, (it.first.second + 1) * cellSize + 5, ((8 - it.first.first)) * cellSize + 5, RAYWHITE);
                 }
 
                 else{
@@ -187,11 +194,11 @@ int main()
                     if(count == 1 && figure->GetColor() == -1 || count == 0 && figure->GetColor() == 1)
                     {
                         current.second = current_j;
-                        current.first = current_i; 
+                        current.first = current_i;
                     }
-                } 
+                }
             }
-    
+
 
            else if(new_pos.first == -1 && new_pos.second == -1)
             {
@@ -205,7 +212,7 @@ int main()
 
                 new_pos.first = new_pos_i;
                 new_pos.second = new_pos_j;
-
+// Вот это точно нужно вынести в отдельную функци. Это неадекватный уровень вложенности.
                 if(board.MoveFigure(figure, figure->GetColor(), current, new_pos))
                 {
                     if(count == 1)
@@ -223,17 +230,17 @@ int main()
 
                                 DrawText("Check Mate !", 190, 200, 75, BLACK);
                                 DrawText("Black Wins !", 190, 400, 75, BLACK);
-                                
+
                                 EndDrawing();
                             }
                             CloseWindow();
                             break;
                         }
-                        
+
                         count = 0;
                     }
 
-                    else 
+                    else
                     {
 
                         if(board.isKingAreMated(FigureColor::Black))
@@ -259,23 +266,19 @@ int main()
                     }
 
 
-                    
+
                 }
 
                 current = {-1,-1};
                 new_pos = {-1,-1};
-                       
-            } 
+
+            }
         }
 
         EndDrawing();
     }
 
-    	
+
     CloseWindow();
     return 0;
 }
-
-
-
-
